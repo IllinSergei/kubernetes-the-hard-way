@@ -140,14 +140,12 @@ cat > ${WORKER0_HOST}-csr.json <<EOF
   ]
 }
 EOF
-
-
-cfssl gencert \ 
-  -ca=ca.pem \ 
-  -ca-key=ca-key.pem \ 
-  -config=ca-config.json \ 
-  -hostname=${WORKER0_IP},${WORKER0_HOST} \ 
-  -profile=kubernetes \ 
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=${WORKER0_IP},${WORKER0_HOST} \
+  -profile=kubernetes \
   ${WORKER0_HOST}-csr.json | cfssljson -bare ${WORKER0_HOST} 
 
 cat > ${WORKER1_HOST}-csr.json <<EOF
@@ -168,14 +166,13 @@ cat > ${WORKER1_HOST}-csr.json <<EOF
   ]
 }
 EOF
-
-cfssl gencert \ 
-  -ca=ca.pem \ 
-  -ca-key=ca-key.pem \ 
-  -config=ca-config.json \ 
-  -hostname=${WORKER1_IP},${WORKER1_HOST} \ 
-  -profile=kubernetes \ 
-  ${WORKER1_HOST}-csr.json | cfssljson -bare ${WORKER1_HOST} 
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=${WORKER1_IP},${WORKER1_HOST} \
+  -profile=kubernetes \
+  ${WORKER1_HOST}-csr.json | cfssljson -bare ${WORKER1_HOST}
 
 } 
 ```
