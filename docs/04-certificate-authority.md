@@ -112,10 +112,19 @@ Kubernetes uses a [special-purpose authorization mode](https://kubernetes.io/doc
 Generate a certificate and private key for each Kubernetes worker node:
 
 ```
-for instance in worker-0 worker-1 worker-2; do
-cat > ${instance}-csr.json <<EOF
+WORKER0_HOST=<Public hostname of your first worker node cloud server>
+WORKER0_IP=<Private IP of your first worker node cloud server>
+
+WORKER1_HOST=
+WORKER1_IP= 
+```
+
+```
+
 {
-  "CN": "system:node:${instance}",
+cat > ${WORKER0_HOST}-csr.json <<EOF
+{
+  "CN": "system:node:${WORKER0_HOST}",
   "key": {
     "algo": "rsa",
     "size": 2048
@@ -132,20 +141,43 @@ cat > ${instance}-csr.json <<EOF
 }
 EOF
 
-EXTERNAL_IP=$(gcloud compute instances describe ${instance} \
-  --format 'value(networkInterfaces[0].accessConfigs[0].natIP)')
 
-INTERNAL_IP=$(gcloud compute instances describe ${instance} \
-  --format 'value(networkInterfaces[0].networkIP)')
+cfssl gencert \ 
+  -ca=ca.pem \ 
+  -ca-key=ca-key.pem \ 
+  -config=ca-config.json \ 
+  -hostname=${WORKER0_IP},${WORKER0_HOST} \ 
+  -profile=kubernetes \ 
+  ${WORKER0_HOST}-csr.json | cfssljson -bare ${WORKER0_HOST} 
 
-cfssl gencert \
-  -ca=ca.pem \
-  -ca-key=ca-key.pem \
-  -config=ca-config.json \
-  -hostname=${instance},${EXTERNAL_IP},${INTERNAL_IP} \
-  -profile=kubernetes \
-  ${instance}-csr.json | cfssljson -bare ${instance}
-done
+cat > ${WORKER1_HOST}-csr.json <<EOF
+{
+  "CN": "system:node:${WORKER1_HOST}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "system:nodes",
+      "OU": "Kubernetes The Hard Way",
+      "ST": "Oregon"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \ 
+  -ca=ca.pem \ 
+  -ca-key=ca-key.pem \ 
+  -config=ca-config.json \ 
+  -hostname=${WORKER1_IP},${WORKER1_HOST} \ 
+  -profile=kubernetes \ 
+  ${WORKER1_HOST}-csr.json | cfssljson -bare ${WORKER1_HOST} 
+
+} 
 ```
 
 Results:
@@ -155,8 +187,6 @@ worker-0-key.pem
 worker-0.pem
 worker-1-key.pem
 worker-1.pem
-worker-2-key.pem
-worker-2.pem
 ```
 
 ### The Controller Manager Client Certificate
