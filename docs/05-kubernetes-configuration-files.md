@@ -207,15 +207,15 @@ worker1=<hostname>
 ```
 
 ```
-scp ${worker0}.kubeconfig kube-proxy.kubeconfig cloud_user@${worker0}:~/
-scp ${worker1}.kubeconfig kube-proxy.kubeconfig cloud_user@${worker1}:~/
+scp ${worker0}.kubeconfig kube-proxy.kubeconfig user@${worker0}:~/
+scp ${worker1}.kubeconfig kube-proxy.kubeconfig user@${worker1}:~/
 
 ```
 OR
 
 ```
 for instance in worker0 worker1; do
-  scp ${instance}.kubeconfig kube-proxy.kubeconfig ${instance}:~/
+  scp ${instance}.kubeconfig kube-proxy.kubeconfig user@${instance}:~/
 done
 ```
 
@@ -227,8 +227,8 @@ master1=<hostname>
 ```
 
 ```
-scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${master0}:~/
-scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${master1}:~/
+scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig user@${master0}:~/
+scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig user@${master1}:~/
 
 ```
 
@@ -236,7 +236,7 @@ OR
 
 ```
 for instance in master0 master1; do
-  scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${instance}:~/
+  scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig user@${instance}:~/
 done
 ```
 
