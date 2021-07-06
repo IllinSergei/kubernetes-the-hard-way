@@ -204,7 +204,9 @@ Copy the appropriate `kubelet` and `kube-proxy` kubeconfig files to each worker 
 ```
 worker0=<hostname>
 worker1=<hostname>
+```
 
+```
 scp ${worker0}.kubeconfig kube-proxy.kubeconfig cloud_user@${worker0}:~/
 scp ${worker1}.kubeconfig kube-proxy.kubeconfig cloud_user@${worker1}:~/
 
@@ -222,7 +224,9 @@ Copy the appropriate `kube-controller-manager` and `kube-scheduler` kubeconfig f
 ```
 master0=<hostname>
 master1=<hostname>
+```
 
+```
 scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${master0}:~/
 scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${master1}:~/
 
