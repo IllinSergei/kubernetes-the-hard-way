@@ -202,16 +202,37 @@ admin.kubeconfig
 Copy the appropriate `kubelet` and `kube-proxy` kubeconfig files to each worker instance:
 
 ```
-for instance in worker-0 worker-1 worker-2; do
-  gcloud compute scp ${instance}.kubeconfig kube-proxy.kubeconfig ${instance}:~/
+worker0=<hostname>
+worker1=<hostname>
+
+scp ${worker0}.kubeconfig kube-proxy.kubeconfig cloud_user@${worker0}:~/
+scp ${worker1}.kubeconfig kube-proxy.kubeconfig cloud_user@${worker1}:~/
+
+```
+OR
+
+```
+for instance in worker0 worker1; do
+  scp ${instance}.kubeconfig kube-proxy.kubeconfig ${instance}:~/
 done
 ```
 
 Copy the appropriate `kube-controller-manager` and `kube-scheduler` kubeconfig files to each controller instance:
 
 ```
-for instance in controller-0 controller-1 controller-2; do
-  gcloud compute scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${instance}:~/
+master0=<hostname>
+master1=<hostname>
+
+scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${master0}:~/
+scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${master1}:~/
+
+```
+
+OR
+
+```
+for instance in master0 master1; do
+  scp admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ${instance}:~/
 done
 ```
 
